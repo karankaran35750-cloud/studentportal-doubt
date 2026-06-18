@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | Classes 9 to 12</title>
+    <link rel="icon" href="IMG_20260614_170351.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. MODERN CSS VARIABLES --- */
+        :root {
+            --bg-color: #f4f7f8; --text-color: #2d3748; --card-bg: #ffffff; --border-color: #e2e8f0;
+            --header-bg: linear-gradient(-45deg, #0056b3, #8e44ad, #17a2b8, #0056b3);
+            --primary-btn: linear-gradient(135deg, #28a745, #20c997); 
+            --btn-shadow: 0 4px 15px rgba(0,0,0,0.08); --btn-shadow-hover: 0 8px 25px rgba(32, 201, 151, 0.3);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.03); --card-shadow-hover: 0 15px 40px rgba(0,0,0,0.08);
+        }
+        body.dark-mode {
+            --bg-color: #0f172a; --text-color: #f1f5f9; --card-bg: #1e293b; --border-color: #334155;
+            --header-bg: linear-gradient(-45deg, #0f172a, #312e81, #083344, #0f172a);
+            --primary-btn: linear-gradient(135deg, #10b981, #059669); 
+            --btn-shadow: 0 4px 15px rgba(0,0,0,0.4); --btn-shadow-hover: 0 8px 25px rgba(16, 185, 129, 0.4);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.4); --card-shadow-hover: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        /* --- 2. GENERAL & ANIMATIONS --- */
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.4s, color 0.4s; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg-color); } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: #94a3b8; } body.dark-mode ::-webkit-scrollbar-thumb { background: #475569; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes floatLogo { 0% { transform: translateY(0px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); } 50% { transform: translateY(-12px); box-shadow: 0 20px 30px rgba(0,0,0,0.3); } 100% { transform: translateY(0px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); } }
+        @keyframes pulseButton { 0% { transform: scale(1); box-shadow: var(--btn-shadow); } 50% { transform: scale(1.02); box-shadow: var(--btn-shadow-hover); } 100% { transform: scale(1); box-shadow: var(--btn-shadow); } }
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.5, 0, 0, 1); } .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- HEADER & SIDEBAR --- */
+        header { background: var(--header-bg); background-size: 400% 400%; animation: gradientBG 15s ease infinite; color: #ffffff; padding: 4rem 0 3rem; text-align: center; position: relative; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .site-logo { width: 140px; height: auto; border-radius: 25px; background-color: #ffffff; margin-bottom: 1.5rem; animation: floatLogo 4s ease-in-out infinite; border: 4px solid rgba(255,255,255,0.2); }
+        header h1 { font-weight: 800; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); margin-bottom: 5px;}
+        .top-btn { position: absolute; top: 20px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px 16px; border-radius: 25px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif; transition: all 0.3s; }
+        .top-btn:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .hamburger-btn { left: 20px; padding: 8px 14px; font-size: 1.2rem; } .login-toggle { left: 80px; } .theme-toggle { right: 20px; } .nine-dots-btn { right: 145px; padding: 6px 12px; display: flex; align-items: center; }
+        
+        .google-apps-dropdown { position: absolute; top: 65px; right: 145px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--card-shadow-hover); width: 280px; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; z-index: 3000; text-align: center; backdrop-filter: blur(10px); }
+        .google-apps-dropdown a { color: var(--text-color); text-decoration: none; font-size: 0.85rem; display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 500; transition: transform 0.2s; } .google-apps-dropdown a:hover { transform: scale(1.15); color: #0056b3; } .google-apps-dropdown img { width: 36px; height: 36px; object-fit: contain; }
+        
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card-bg); z-index: 4000; box-shadow: 5px 0 30px rgba(0,0,0,0.15); transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.05); padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; } .sidebar.open { left: 0; }
+        .sidebar h2 { color: #0056b3; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-top: 15px; font-weight: 800; font-size: 1.6rem; letter-spacing: 0.5px; } body.dark-mode .sidebar h2 { color: #4da3ff; }
+        .sidebar a { display: block; padding: 16px; background: var(--bg-color); color: var(--text-color); text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 1.1rem; border: 1px solid var(--border-color); text-align: center; transition: all 0.3s; } .sidebar a:hover { background: #0056b3; color: white; transform: translateX(10px) scale(1.02); box-shadow: 0 5px 15px rgba(0,86,179,0.3); border-color: transparent;}
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3999; backdrop-filter: blur(5px); transition: opacity 0.3s; opacity: 0; pointer-events: none; } .sidebar-overlay.open { opacity: 1; pointer-events: all; } .close-sidebar { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; cursor: pointer; color: #888; transition: color 0.3s;} .close-sidebar:hover { color: #e11d48; }
+
+        /* --- LAYOUT & CARDS --- */
+        .container { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; }
+        .section-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 2.5rem; box-shadow: var(--card-shadow); margin-bottom: 2.5rem; opacity: 0; animation: fadeInUp 0.8s ease-out forwards; transition: transform 0.3s ease, box-shadow 0.3s ease; } 
+        .section-box:hover { box-shadow: var(--card-shadow-hover); transform: translateY(-3px); } 
+        .section-box.hero-banner { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; } .section-box.hero-banner h2, .section-box.hero-banner p { color: white; border-bottom: none; }
+        .section-box h2, .section-box h3 { margin-top: 0; color: #0056b3; border-bottom: 2px solid var(--border-color); padding-bottom: 0.8rem; font-weight: 700; } body.dark-mode .section-box h2, body.dark-mode .section-box h3 { color: #4da3ff; }
+        .grid-2 { display: grid; gap: 1.8rem; margin-bottom: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); } 
+
+        /* --- DASHBOARD, KANBAN & TIMERS --- */
+        #privateDashboard { border-top: 5px solid #ffc107; }
+        .quote-box { font-style: italic; background: var(--bg-color); padding: 18px; border-radius: 12px; margin-bottom: 25px; border-left: 5px solid #8e44ad; color: var(--text-color); font-weight: 500; }
+        
+        .kanban-board { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; }
+        .kanban-column { flex: 1; min-width: 260px; background: var(--bg-color); border-radius: 12px; padding: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+        .kanban-column h4 { text-align: center; margin: 0 0 10px 0; color: var(--text-color); font-size: 1.05rem; font-weight: 700; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .kanban-item { background: var(--card-bg); padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); cursor: grab; font-size: 0.95rem; font-weight: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; gap: 10px; transition: transform 0.2s;} .kanban-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); } .kanban-item:active { cursor: grabbing; opacity: 0.7; }
+        
+        .timer-display { font-size: 4rem; font-weight: 800; margin: 10px 0; color: transparent; background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); -webkit-background-clip: text; background-clip: text; text-shadow: 2px 2px 10px rgba(255,8,68,0.2); } 
+        .countdown-display { font-size: 2.5rem; font-weight: 800; color: transparent; background: linear-gradient(135deg, #f83600 0%, #f9d423 100%); -webkit-background-clip: text; background-clip: text; letter-spacing: 1px; }
+        
+        /* --- DYNAMIC FLASHCARDS --- */
+        .flashcard-container { perspective: 1000px; width: 100%; height: 200px; margin-bottom: 15px; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; border-radius: 16px; box-shadow: var(--btn-shadow); }
+        .flashcard-container.is-flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; box-sizing: border-box; border-radius: 16px; border: 1px solid var(--border-color); font-size: 1.2rem; font-weight: 700; background: var(--bg-color); word-wrap: break-word; }
+        .flashcard-back { background: linear-gradient(135deg, #8e44ad, #3498db); color: white; transform: rotateY(180deg); border: none; }
+        
+        /* --- DYNAMIC SYLLABUS --- */
+        .progress-bar-bg { width: 100%; background: var(--border-color); border-radius: 12px; height: 14px; margin-bottom: 15px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #28a745, #20c997); width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .chapter-list { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow-y: auto; }
+        .chapter-list li { padding: 10px 8px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-color); font-weight: 500; font-size: 0.95rem;}
+        .chapter-list input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #28a745; }
+
+        /* --- FORM ELEMENTS & BUTTONS --- */
+        .form-group { margin-bottom: 1.5rem; text-align: left; } label { display: block; margin-bottom: 0.6rem; font-weight: 600; font-size: 0.95rem; color: var(--text-color); }
+        input, select, textarea { width: 100%; padding: 0.9rem; border: 2px solid var(--border-color); border-radius: 10px; box-sizing: border-box; font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-color); font-size: 0.95rem; transition: all 0.3s ease; } 
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #0056b3; box-shadow: 0 0 0 4px rgba(0,86,179,0.1); background: var(--card-bg);}
+        .calc-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+
+        button.action-btn { background: var(--primary-btn); color: white; padding: 0.9rem 1.8rem; border: none; border-radius: 10px; font-size: 1.05rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; box-shadow: var(--btn-shadow); font-family: 'Poppins', sans-serif; transition: all 0.3s; } 
+        button.action-btn:hover { transform: translateY(-3px); box-shadow: var(--btn-shadow-hover); } button.action-btn:active { transform: translateY(1px); box-shadow: none; }
+        .review-btn { background: linear-gradient(135deg, #17a2b8, #0ea5e9) !important; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3); } .review-btn:hover { box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4); }
+        .calc-btn { background: linear-gradient(135deg, #6f42c1, #8b5cf6) !important; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); } .calc-btn:hover { box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); }
+        .pulse { animation: pulseButton 2s infinite ease-in-out; }
+
+        /* --- MODALS & WIDGETS --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 1; transition: 0.4s; } .modal-overlay.hidden { opacity: 0; pointer-events: none; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 450px; padding: 2.5rem; border-radius: 20px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); max-height: 90vh; overflow-y: auto; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .modal-overlay.hidden .modal-content { transform: scale(0.9) translateY(30px); } .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #94a3b8; transition: color 0.3s; line-height: 1; } .close-modal:hover { color: #e11d48; }
+        .auth-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 2rem; } .auth-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 700; color: #94a3b8; border-bottom: 3px solid transparent; transition: all 0.3s;} .auth-tab.active { color: #0056b3; border-bottom: 3px solid #0056b3; } body.dark-mode .auth-tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; }
+        .hidden { display: none !important; }
+        
+        .fab { position: fixed; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 1000; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .fab:hover { transform: translateY(-8px) scale(1.1); box-shadow: 0 12px 25px rgba(0,0,0,0.4); }
+        .fab-whatsapp { bottom: 25px; left: 25px; background: linear-gradient(135deg, #25D366, #128C7E); } .fab-telegram { bottom: 100px; left: 25px; background: linear-gradient(135deg, #0088cc, #0056b3); } .fab-top { bottom: 25px; right: 25px; background: #334155; display: none; cursor: pointer; border:none; font-size: 24px; } .fab-ai { bottom: 175px; left: 25px; background-color: #ffffff; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        
+        .ai-chat-window { position: fixed; bottom: 130px; left: 100px; width: 350px; max-width: 85vw; height: 500px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); display: flex; flex-direction: column; z-index: 2000; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: bottom left; } .ai-chat-window.hidden { transform: scale(0.8) translateY(30px) rotate(-5deg); opacity: 0; pointer-events: none; }
+        .ai-chat-header { background: linear-gradient(135deg, #6f42c1, #8b5cf6); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.1rem; } .close-chat { cursor: pointer; font-size: 1.8rem; line-height: 1; transition: transform 0.3s; } .close-chat:hover{ transform: rotate(90deg); }
+        .ai-chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-color); } .chat-message { max-width: 85%; padding: 12px 18px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; box-shadow: 0 2px 5px rgba(0,0,0,0.05); } .ai-message { background: var(--card-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border-color); } .user-message { background: linear-gradient(135deg, #0056b3, #0ea5e9); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .ai-chat-input-area { display: flex; padding: 15px; background: var(--card-bg); border-top: 1px solid var(--border-color); } .ai-chat-input-area input { flex: 1; padding: 12px 20px; border: 1px solid var(--border-color); border-radius: 30px; outline: none; background: var(--bg-color); color: var(--text-color); font-family: 'Poppins', sans-serif;} .ai-chat-input-area input:focus { border-color: #8b5cf6; } .ai-chat-input-area button { background: linear-gradient(135deg, #6f42c1, #8b5cf6); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; margin-left: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);} .ai-chat-input-area button:hover { transform: scale(1.1) rotate(-10deg); }
+        
+        footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 2.5rem; margin-top: 4rem; font-weight: 500; font-size: 0.95rem;} footer a { color: #38bdf8; text-decoration: none; }
+
+        @media (max-width: 600px) {
+            .top-btn { position: relative; top: 0; left: 0; right: 0; display: inline-block; margin: 8px 5px; font-size: 0.85rem; padding: 8px 15px; }
+            header { padding-top: 1.5rem; } .nine-dots-btn { display: inline-flex; }
+            .google-apps-dropdown { top: 140px; right: 50%; transform: translateX(50%); width: 90vw; }
+            .container { padding: 0 15px; margin: 1.5rem auto; } .section-box { padding: 1.8rem; }
+            .kanban-column { min-width: 220px; }
+            .timer-display { font-size: 3rem; } .countdown-display { font-size: 1.8rem; }
+        }
+    </style>
+
+    <script src="https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"></script>
+</head>
+<body>
+
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div id="sidebarMenu" class="sidebar">
+        <span class="close-sidebar" onclick="toggleSidebar()">&times;</span>
+        <h2>📚 Explore Classes</h2>
+        <a href="Class 9.html">Class 9</a>
+        <a href="Class10.html">Class 10</a>
+        <a href="Class11.html">Class 11</a>
+        <a href="Class12.html">Class 12</a>
+    </div>
+
+    <header>
+        <button class="top-btn hamburger-btn" onclick="toggleSidebar()">☰</button>
+        <button class="top-btn login-toggle" id="userBtn" onclick="openAuthOrProfile()">👤 Login / Sign Up</button>
+        <button class="top-btn theme-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+        <button class="top-btn nine-dots-btn hidden" id="appsLauncherBtn" onclick="toggleAppsMenu()" title="Google Apps">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-6-8c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm6 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-6-8c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm6 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-8c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-8c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
+        </button>
+
+        <div id="googleAppsMenu" class="google-apps-dropdown hidden">
+            <a href="https://classroom.google.com" target="_blank"><img src="https://img.icons8.com/color/48/google-classroom.png" alt="Classroom"><span>Classroom</span></a> 
+            <a href="https://drive.google.com" target="_blank"><img src="https://img.icons8.com/color/48/google-drive--v2.png" alt="Drive"><span>Drive</span></a>
+            <a href="https://docs.google.com" target="_blank"><img src="https://img.icons8.com/color/48/google-docs--v2.png" alt="Docs"><span>Docs</span></a> 
+            <a href="https://keep.google.com" target="_blank"><img src="https://img.icons8.com/color/48/google-keep.png" alt="Keep"><span>Keep</span></a>
+            <a href="https://meet.google.com" target="_blank"><img src="https://img.icons8.com/color/48/google-meet--v2.png" alt="Meet"><span>Meet</span></a> 
+            <a href="https://mail.google.com" target="_blank"><img src="https://img.icons8.com/color/48/gmail-new.png" alt="Gmail"><span>Gmail</span></a>
+        </div>
+        
+        <img src="IMG_20260614_170351.jpg" alt="Logo" class="site-logo">
+        <h1>Student Academic Portal</h1>
+        <p>Comprehensive support & tools for Classes 9 to 12</p>
+    </header>
+
+    <div class="container">
+
+        <div class="section-box hero-banner reveal">
+            <h2 style="border:none; margin-bottom: 10px;">Hi, I'm Karan 👋</h2>
+            <p style="font-size: 1.15rem; line-height: 1.6; margin: 0; font-weight: 500;">Welcome to your ultimate academic hub! Access study materials, PYQs, and interactive tools via the ☰ menu above.</p>
+        </div>
+        
+        <div id="privateDashboard" class="section-box hidden reveal">
+            <h2 style="border-bottom: 2px solid #ffc107;">Dashboard</h2>
+            <div class="quote-box" id="dailyQuote">"Loading daily motivation..."</div>
+            
+            <div class="grid-2" style="margin-bottom: 0;">
+                <div>
+                    <h3 style="border:none; margin-top: 10px;">📝 Smart Notes</h3>
+                    <textarea id="userNotes" placeholder="Write down formulas, ideas, or quick notes..." style="height: 110px; margin-bottom: 15px;" oninput="saveUserData()"></textarea>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn review-btn" style="width: auto; padding: 0.8rem 1.5rem;" onclick="readNotesOutLoud()" title="Read Aloud">🔊 Listen</button>
+                        <input type="file" id="cloudUploadInput" style="display: none;" onchange="uploadToSupabase(this)">
+                        <button class="action-btn" style="width: auto; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="document.getElementById('cloudUploadInput').click()">📎 Cloud Upload</button>
+                    </div>
+                    <p id="uploadStatus" style="font-size: 0.85rem; color: #888; margin-top: 8px; font-weight: 500;"></p>
+                </div>
+                
+                <div>
+                    <h3 style="border:none; margin-top: 10px;">📊 Syllabus Tracker</h3>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="sylBar"></div></div>
+                    <p id="sylText" style="text-align: right; margin-top: -10px; font-size: 0.9rem; font-weight: 700; color: #28a745;">0% Completed</p>
+                    
+                    <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                        <input type="text" id="newSylInput" placeholder="Add chapter/topic..." onkeypress="if(event.key === 'Enter') addSyllabusItem()">
+                        <button class="action-btn" style="width: auto; margin-top: 0; padding: 0 15px;" onclick="addSyllabusItem()">Add</button>
+                    </div>
+                    <ul class="chapter-list" id="dynamicSyllabusList" style="max-height: 120px;">
+                        </ul>
+                </div>
+            </div>
+
+            <h3 style="border:none; margin-top: 30px;">📋 Task Board</h3>
+            <p style="font-size: 0.9rem; color:#888; margin-top: 0; margin-bottom: 15px;">Drag tasks below, or click the blue arrow (➡️) to move them instantly.</p>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="kanbanInput" placeholder="Add a new homework task..." onkeypress="if(event.key === 'Enter') addKanbanTask()">
+                <button class="action-btn" style="width: auto; margin-top: 0; padding: 0 25px;" onclick="addKanbanTask()">Add</button>
+            </div>
+            <div class="kanban-board">
+                <div class="kanban-column" id="kb-todo" ondragover="dragOver(event)" ondrop="drop(event, 'todo')"><h4>To-Do</h4></div>
+                <div class="kanban-column" id="kb-doing" ondragover="dragOver(event)" ondrop="drop(event, 'doing')"><h4>In Progress</h4></div>
+                <div class="kanban-column" id="kb-done" ondragover="dragOver(event)" ondrop="drop(event, 'done')"><h4>Done ✅</h4></div>
+            </div>
+        </div>
+
+        <div class="section-box reveal" style="text-align: center;">
+            <h2 style="border:none;">⏳ Board Exams 2027 Countdown</h2>
+            <div class="countdown-display" id="countdown">Loading timer...</div>
+            <p style="margin-top: 5px; font-size: 0.95rem; color: #888; font-weight: 500;">Target: February 15, 2027</p>
+        </div>
+
+        <div class="grid-2 reveal">
+            <div class="section-box tool-box" style="margin-bottom:0; display:flex; flex-direction:column;">
+                <h3 style="border:none;">🗂️ Flashcards</h3>
+                <div class="flashcard-container" id="flashCardContainer" onclick="flipCard()">
+                    <div class="flashcard-inner" id="flashCardInner">
+                        <div class="flashcard-front" id="flashQ">Loading...</div>
+                        <div class="flashcard-back" id="flashA">Loading...</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 15px;">
+                    <button class="action-btn review-btn" style="width:auto; padding: 0.6rem 1rem;" onclick="prevCard()">⬅️ Prev</button>
+                    <button class="action-btn" style="width:auto; padding: 0.6rem 1rem; background: #dc3545;" onclick="deleteCurrentCard()" title="Delete Card">🗑️</button>
+                    <button class="action-btn review-btn" style="width:auto; padding: 0.6rem 1rem;" onclick="nextCard()">Next ➡️</button>
+                </div>
+                <div style="background: var(--bg-color); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); margin-top: auto;">
+                    <input type="text" id="newFlashQ" placeholder="Question (e.g., DNA)" style="margin-bottom: 10px; padding: 0.8rem;">
+                    <input type="text" id="newFlashA" placeholder="Answer (e.g., Genetic code)" style="margin-bottom: 10px; padding: 0.8rem;">
+                    <button class="action-btn" style="padding: 0.8rem; margin-top:0;" onclick="addFlashcard()">➕ Add Flashcard</button>
+                </div>
+            </div>
+
+            <div class="section-box tool-box" style="margin-bottom:0;">
+                <h3 style="border:none;">📖 Quick Dictionary</h3>
+                <div class="calc-inputs" style="grid-template-columns: 1fr;">
+                    <input type="text" id="dictInput" placeholder="Enter a word (e.g., cell)" onkeypress="if(event.key === 'Enter') searchDictionary()">
+                    <button class="action-btn calc-btn" onclick="searchDictionary()">Search</button>
+                </div>
+                <p id="dictResult" style="margin-top: 15px; font-size: 0.95rem; text-align: left; padding: 15px; background: var(--bg-color); border-radius: 12px; min-height: 50px; font-weight: 500;">Definition will appear here...</p>
+            </div>
+        </div>
+
+        <div class="section-box reveal" style="text-align:center; padding: 1.5rem;">
+            <h3 style="border:none; margin-bottom: 10px;">📄 Custom PDF Viewer</h3>
+            <p style="font-size: 0.9rem; color: #888; margin-top: 0; margin-bottom: 15px; font-weight: 500;">Select a PDF from your device to read it here.</p>
+            <input type="file" id="localPdfInput" accept="application/pdf" style="margin-bottom: 15px;" onchange="loadLocalPDF(this)">
+            
+            <iframe id="pdfViewerFrame" src="" style="width: 100%; height: 500px; border: 1px solid var(--border-color); border-radius: 12px; display: none;"></iframe>
+            <div id="pdfPlaceholder" style="width: 100%; height: 260px; border: 2px dashed var(--border-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #888; font-weight: 500;">No PDF selected</div>
+        </div>
+
+        <div class="grid-2 reveal">
+            <div class="section-box tool-box" style="margin-bottom:0;">
+                <h3 style="border:none;">Focus Timer</h3>
+                <div class="timer-display" id="timer">25:00</div>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="action-btn" style="width: 120px;" onclick="startTimer()">Start</button>
+                    <button class="action-btn review-btn" style="width: 120px;" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+            <div class="section-box tool-box" style="margin-bottom:0;">
+                <h3 style="border:none;">📊 Percentage Calculator</h3>
+                <div class="calc-inputs"><input type="number" id="sub1" placeholder="Sub 1"> <input type="number" id="sub2" placeholder="Sub 2"> <input type="number" id="sub3" placeholder="Sub 3"> <input type="number" id="sub4" placeholder="Sub 4"> <input type="number" id="sub5" placeholder="Sub 5" style="grid-column: span 2;"></div>
+                <button class="action-btn calc-btn" onclick="calculatePercentage()">Calculate</button>
+                <h4 id="calcResult" style="margin-top: 15px; color: #28a745; font-size: 1.2rem;"></h4>
+            </div>
+        </div>
+
+        <div class="section-box reveal">
+            <h2>📈 Graphing Calculator</h2>
+            <p style="margin-top: 0; margin-bottom: 20px; color: #888; font-weight: 500;">Powered by the official Desmos Math Engine.</p>
+            <div id="desmos-calculator" style="width: 100%; height: 450px; border-radius: 16px; border: 2px solid var(--border-color); overflow: hidden;"></div>
+        </div>
+
+        <div class="section-box reveal">
+            <h3 style="border:none;">🎥 Study Video</h3>
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 16px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1);">
+                <iframe src="https://www.youtube.com/embed/lDMGWlNlljY" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="section-box reveal">
+            <h2>✉️ Ask an Academic Doubt</h2>
+            <form action="https://api.web3forms.com/submit" method="POST">
+                <input type="hidden" name="access_key" value="f87a241a-5eda-4d69-9edd-9a195799fae8">
+                <div class="grid-2" style="margin-bottom: 0;"><div class="form-group"><label>Full Name</label><input type="text" name="Name" required></div><div class="form-group"><label>Mobile / Email</label><input type="text" name="Contact" required></div></div>
+                <div class="grid-2" style="margin-bottom: 0;">
+                    <div class="form-group"><label>Class</label><select id="classSelect" name="Class" required onchange="toggleStreamOptions()"><option value="" disabled selected>Select</option><option value="9">Class 9</option><option value="10">Class 10</option><option value="11">Class 11</option><option value="12">Class 12</option></select></div>
+                    <div class="form-group hidden" id="streamGroup"><label>Stream</label><select id="streamSelect" name="Stream"><option value="" disabled selected>Select</option><option value="PCM">PCM</option><option value="PCB">PCB</option><option value="Commerce">Commerce</option><option value="Arts">Arts</option></select></div>
+                </div>
+                <div class="form-group"><label>Doubt Details</label><textarea name="Doubt" required></textarea></div>
+                <button class="action-btn pulse" type="submit" style="padding: 1.2rem; font-size: 1.1rem; background: linear-gradient(135deg, #0ea5e9, #2563eb);">Send Response</button>
+            </form>
+        </div>
+
+        <div class="section-box reveal">
+            <h2>💬 Public Discussion & Study Room</h2>
+            <style> #cusdis_thread { width: 100%; min-height: 550px; display: block; } #cusdis_thread iframe { width: 100% !important; min-height: 550px !important; border: none !important; } </style>
+            <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id="ef3868a3-cbe0-417f-a514-13ae588c9aa8" data-page-id="student-portal-home"></div>
+            <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal-overlay hidden">
+        <div class="modal-content" style="text-align: center; max-width: 380px;">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <div style="font-size: 5rem; margin-bottom: 10px;">👤</div>
+            <h2 id="profileName" style="margin: 0; color: var(--text-color); font-weight: 800;">Student</h2>
+            <p id="profileEmail" style="color: #888; margin-top: 5px; margin-bottom: 25px; font-weight: 500;">student@email.com</p>
+            <div style="text-align: left; background: var(--bg-color); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 25px;">
+                <p style="margin: 5px 0;"><strong>Role:</strong> Verified Student</p><p style="margin: 8px 0 0 0;"><strong>Status:</strong> 🟢 Active Online</p>
+            </div>
+            <button class="action-btn" style="background: linear-gradient(135deg, #ef4444, #e11d48);" onclick="logoutUser()">Log Out Safely</button>
+        </div>
+    </div>
+
+    <div id="authModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+            <div class="auth-tabs"><div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login</div><div class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Sign Up</div></div>
+            <div id="viewLogin">
+                <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required></div><div class="form-group"><label>Password</label><input type="password" id="loginPassword" required></div><button class="action-btn pulse" onclick="handleAuth('login')">Sign In</button>
+            </div>
+            <div id="viewSignup" class="hidden">
+                <div class="form-group"><label>Name</label><input type="text" id="signupName" required></div><div class="form-group"><label>Email</label><input type="email" id="signupEmail" required></div><div class="form-group"><label>Password</label><input type="password" id="signupPassword" required></div><button class="action-btn pulse" onclick="handleAuth('signup')">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="fab fab-ai" onclick="toggleAIChat()"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="geminiGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4285F4" /><stop offset="50%" stop-color="#9B72CB" /><stop offset="100%" stop-color="#D96570" /></linearGradient></defs><path d="M12 2C12 7.52285 16.4772 12 22 12C16.4772 12 12 16.4772 12 22C12 16.4772 7.52285 12 2 12C7.52285 12 12 7.52285 12 2Z" fill="url(#geminiGrad)"/></svg></button>
+    <div id="aiChatWindow" class="ai-chat-window hidden">
+        <div class="ai-chat-header"><span>🤖 AI Tutor</span><span class="close-chat" onclick="toggleAIChat()">&times;</span></div>
+        <div class="ai-chat-messages" id="aiChatMessages"><div class="chat-message ai-message">Hello! I am your AI Tutor! How can I help you today?</div></div>
+        <div class="ai-chat-input-area"><input type="text" id="aiUserInput" placeholder="Ask a question..." onkeypress="handleAIKeyPress(event)"><button onclick="sendAIMessage()">➤</button></div>
+    </div>
+
+    <a href="https://t.me/jeevaultle" class="fab fab-telegram" target="_blank"><svg viewBox="0 0 24 24" width="28" height="28" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="m20.665 3.717-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/></svg></a>
+    <a href="https://whatsapp.com/channel/0029VbE1siDDjiOjVDvRyd0G" class="fab fab-whatsapp" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></a>
+    <button class="fab fab-top" id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><svg viewBox="0 0 24 24" width="28" height="28" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg></button>
+    <footer><p>&copy; 2026 Student Academic Portal</p></footer>
+
+    <script>
+        // --- 1. DAILY MOTIVATION & TEXT-TO-SPEECH ---
+        const quotes = ["The secret of getting ahead is getting started.", "It always seems impossible until it's done.", "Success is the sum of small efforts, repeated day in and out."];
+        document.addEventListener("DOMContentLoaded", () => { 
+            const qEl = document.getElementById('dailyQuote'); 
+            if(qEl) qEl.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`; 
+            
+            // Initialization triggers
+            try { loadFlashcards(); } catch(e) {}
+            try { loadSyllabusState(); } catch(e) {}
+        });
+        
+        function readNotesOutLoud() {
+            const text = document.getElementById('userNotes')?.value.trim();
+            if (!text) { alert("Please type some notes to read first!"); return; }
+            if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.9; window.speechSynthesis.speak(u); } 
+            else alert("Text-to-speech not supported.");
+        }
+
+        // --- 2. DYNAMIC FLASHCARDS & DICTIONARY ---
+        let dynamicFlashcards = [];
+        let fIndex = 0;
+
+        function loadFlashcards() {
+            const saved = localStorage.getItem('studentPortal_flashcards_' + (currentUser ? currentUser.id : 'guest'));
+            if(saved) {
+                dynamicFlashcards = JSON.parse(saved);
+            } else {
+                dynamicFlashcards = [
+                    {q:"Derivative of sin(x)?", a:"cos(x)"}, 
+                    {q:"Ideal Gas Law?", a:"PV = nRT"},
+                    {q:"Powerhouse of the cell?", a:"Mitochondria"}
+                ];
+            }
+            fIndex = 0;
+            updateFlashcardDisplay();
+        }
+
+        function saveFlashcards() {
+            localStorage.setItem('studentPortal_flashcards_' + (currentUser ? currentUser.id : 'guest'), JSON.stringify(dynamicFlashcards));
+        }
+
+        function updateFlashcardDisplay() {
+            const container = document.getElementById('flashCardContainer');
+            if(!container) return;
+            
+            if (container.classList.contains('is-flipped')) {
+                container.classList.remove('is-flipped');
+                setTimeout(setCardText, 300);
+            } else {
+                setCardText();
+            }
+
+            function setCardText() {
+                if (dynamicFlashcards.length === 0) {
+                    document.getElementById('flashQ').innerText = "No cards added!";
+                    document.getElementById('flashA').innerText = "Add a card below.";
+                } else {
+                    document.getElementById('flashQ').innerText = dynamicFlashcards[fIndex].q;
+                    document.getElementById('flashA').innerText = dynamicFlashcards[fIndex].a;
+                }
+            }
+        }
+
+        function nextCard() {
+            if(dynamicFlashcards.length > 1) {
+                fIndex = (fIndex + 1) % dynamicFlashcards.length;
+            }
+            updateFlashcardDisplay();
+        }
+
+        function prevCard() {
+            if(dynamicFlashcards.length > 1) {
+                fIndex = (fIndex - 1 + dynamicFlashcards.length) % dynamicFlashcards.length;
+            }
+            updateFlashcardDisplay();
+        }
+
+        function flipCard() { 
+            if(dynamicFlashcards.length > 0) {
+                document.getElementById('flashCardContainer').classList.toggle('is-flipped'); 
+            }
+        }
+
+        function addFlashcard() {
+            const q = document.getElementById('newFlashQ').value.trim();
+            const a = document.getElementById('newFlashA').value.trim();
+            if(q && a) {
+                dynamicFlashcards.push({q, a});
+                document.getElementById('newFlashQ').value = '';
+                document.getElementById('newFlashA').value = '';
+                saveFlashcards();
+                fIndex = dynamicFlashcards.length - 1; 
+                updateFlashcardDisplay();
+            } else {
+                alert("Please enter both a Question and an Answer.");
+            }
+        }
+
+        function deleteCurrentCard() {
+            if(dynamicFlashcards.length === 0) return;
+            if(confirm("Delete this flashcard permanently?")) {
+                dynamicFlashcards.splice(fIndex, 1);
+                if(fIndex >= dynamicFlashcards.length) fIndex = Math.max(0, dynamicFlashcards.length - 1);
+                saveFlashcards();
+                updateFlashcardDisplay();
+            }
+        }
+        
+        async function searchDictionary() {
+            const word = document.getElementById('dictInput').value.trim(); const resBox = document.getElementById('dictResult');
+            if(!word) return; resBox.innerText = "Searching...";
+            try { const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`); const data = await res.json();
+                if(data.title === "No Definitions Found") { resBox.innerText = "Word not found."; } else { resBox.innerHTML = `<strong>${word}:</strong> ${data[0].meanings[0].definitions[0].definition}`; }
+            } catch(e) { resBox.innerText = "Network error. Try again."; }
+        }
+
+        // --- 3. DYNAMIC SYLLABUS TRACKER ---
+        let syllabusItems = [];
+        
+        function loadSyllabusState() {
+            const saved = localStorage.getItem('studentPortal_syllabus_' + (currentUser ? currentUser.id : 'guest'));
+            if(saved) { 
+                syllabusItems = JSON.parse(saved); 
+            } else {
+                syllabusItems = [
+                    { id: 's1', text: 'Real Numbers', checked: false },
+                    { id: 's2', text: 'Polynomials', checked: false },
+                    { id: 's3', text: 'Linear Equations', checked: false }
+                ];
+            }
+            renderSyllabus();
+        }
+
+        function saveSyllabusState() {
+            localStorage.setItem('studentPortal_syllabus_' + (currentUser ? currentUser.id : 'guest'), JSON.stringify(syllabusItems));
+            updateSyllabusProgress();
+        }
+
+        function renderSyllabus() {
+            const list = document.getElementById('dynamicSyllabusList');
+            if(!list) return;
+            list.innerHTML = '';
+            syllabusItems.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <input type="checkbox" onchange="toggleSyllabusItem(${index})" ${item.checked ? 'checked' : ''}>
+                    <span style="flex:1; ${item.checked ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${item.text}</span>
+                    <span style="color:#ef4444; cursor:pointer; font-size:1.2rem;" onclick="deleteSyllabusItem(${index})" title="Remove">✖</span>
+                `;
+                list.appendChild(li);
+            });
+            updateSyllabusProgress();
+        }
+
+        function addSyllabusItem() {
+            const input = document.getElementById('newSylInput');
+            const text = input.value.trim();
+            if(text) {
+                syllabusItems.push({ id: 's_'+Date.now(), text: text, checked: false });
+                input.value = '';
+                saveSyllabusState();
+                renderSyllabus();
+            }
+        }
+
+        function toggleSyllabusItem(index) {
+            syllabusItems[index].checked = !syllabusItems[index].checked;
+            saveSyllabusState();
+            renderSyllabus(); 
+        }
+
+        function deleteSyllabusItem(index) {
+            syllabusItems.splice(index, 1);
+            saveSyllabusState();
+            renderSyllabus();
+        }
+
+        function updateSyllabusProgress() {
+            if(syllabusItems.length === 0) {
+                document.getElementById('sylBar').style.width = '0%'; 
+                document.getElementById('sylText').innerText = '0% Completed';
+                return;
+            }
+            const checked = syllabusItems.filter(i => i.checked).length;
+            const pct = Math.round((checked / syllabusItems.length) * 100);
+            document.getElementById('sylBar').style.width = pct + '%'; 
+            document.getElementById('sylText').innerText = pct + '% Completed';
+        }
+
+        // --- 4. CUSTOM LOCAL PDF VIEWER ---
+        function loadLocalPDF(input) {
+            const file = input.files[0];
+            if (file && file.type === "application/pdf") {
+                const fileURL = URL.createObjectURL(file);
+                document.getElementById('pdfViewerFrame').src = fileURL;
+                document.getElementById('pdfViewerFrame').style.display = 'block';
+                document.getElementById('pdfPlaceholder').style.display = 'none';
+            } else {
+                alert("Please select a valid PDF file.");
+            }
+        }
+
+        // --- 5. KANBAN DRAG & DROP ---
+        let draggedTask = null;
+        function addKanbanTask() {
+            const input = document.getElementById('kanbanInput'); if(input.value.trim() === '') return;
+            const id = 'task_' + Date.now();
+            createKanbanHTML(input.value.trim(), id, 'kb-todo');
+            saveKanbanState(); input.value = '';
+        }
+        function createKanbanHTML(text, id, colId) {
+            const el = document.createElement('div'); el.className = 'kanban-item'; el.draggable = true; el.id = id;
+            el.innerHTML = `<span style="flex:1;">${text}</span>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <span style="cursor:pointer; font-size:1.3rem; transition: transform 0.2s;" onclick="moveTaskNext(this)" title="Move Next">➡️</span>
+                <span style="color:#ef4444; cursor:pointer; font-size:1.3rem; transition: transform 0.2s;" onclick="this.parentElement.parentElement.remove(); saveKanbanState();" title="Delete">✖</span>
+            </div>`;
+            el.ondragstart = (e) => { draggedTask = el; setTimeout(() => el.style.opacity = '0.5', 0); };
+            el.ondragend = () => { draggedTask.style.opacity = '1'; draggedTask = null; saveKanbanState(); };
+            const column = document.getElementById(colId);
+            if(column) column.appendChild(el);
+        }
+        function moveTaskNext(btn) {
+            const item = btn.parentElement.parentElement; const currentCol = item.parentElement.id;
+            if (currentCol === 'kb-todo') document.getElementById('kb-doing').appendChild(item);
+            else if (currentCol === 'kb-doing') document.getElementById('kb-done').appendChild(item);
+            else if (currentCol === 'kb-done') document.getElementById('kb-todo').appendChild(item);
+            saveKanbanState();
+        }
+        function dragOver(e) { e.preventDefault(); }
+        function drop(e, colName) { e.preventDefault(); const col = document.getElementById('kb-' + colName); if(draggedTask && col) { col.appendChild(draggedTask); saveKanbanState(); } }
+        
+        function saveKanbanState() {
+            if(!currentUser) return;
+            const data = { todo:[], doing:[], done:[] };
+            ['todo','doing','done'].forEach(c => { 
+                const col = document.getElementById('kb-'+c);
+                if(col) {
+                    col.querySelectorAll('.kanban-item').forEach(el => { data[c].push({id: el.id, text: el.children[0].innerText}); });
+                }
+            });
+            localStorage.setItem('studentPortal_kb_' + currentUser.id, JSON.stringify(data));
+        }
+        function loadKanbanState() {
+            if(!currentUser) return;
+            ['todo','doing','done'].forEach(c => { const col = document.getElementById('kb-'+c); if(col) { Array.from(col.children).forEach(ch => { if(ch.tagName==='DIV' && ch.className==='kanban-item') ch.remove(); }); } });
+            const saved = localStorage.getItem('studentPortal_kb_' + currentUser.id);
+            if(saved) { const data = JSON.parse(saved); ['todo','doing','done'].forEach(c => { data[c].forEach(t => createKanbanHTML(t.text, t.id, 'kb-'+c)); }); }
+        }
+
+        // --- 6. SIDEBAR & TOOLS ---
+        function toggleSidebar() { document.getElementById('sidebarMenu').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
+        setInterval(function() { try { var dist = new Date("2027/02/15 00:00:00").getTime() - new Date().getTime(); var el = document.getElementById("countdown"); if(el) { if (dist < 0) { el.innerHTML = "EXAMS STARTED!"; return; } el.innerHTML = Math.floor(dist/86400000)+"d " + Math.floor((dist%86400000)/3600000)+"h " + Math.floor((dist%3600000)/60000)+"m " + Math.floor((dist%60000)/1000)+"s"; } } catch(e) {} }, 1000);
+        function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); } try { if(localStorage.getItem('theme') === 'dark') toggleDarkMode(); } catch(e) {}
+        
+        var timerInterval; var timeLeft = 1500; 
+        function updateTimerDisplay() { var m = Math.floor(timeLeft/60); var s = timeLeft%60; const timerEl = document.getElementById('timer'); if(timerEl) { timerEl.innerText = (m<10?'0'+m:m)+':'+(s<10?'0'+s:s); } } 
+        function startTimer() { clearInterval(timerInterval); timerInterval = setInterval(function() { if(timeLeft>0){timeLeft--; updateTimerDisplay();} else {clearInterval(timerInterval); alert("Time's up!");} }, 1000); } 
+        function resetTimer() { clearInterval(timerInterval); timeLeft = 1500; updateTimerDisplay(); }
+        function calculatePercentage() { var sum=0; var count=0; for(var i=1; i<=5; i++) { var val = parseFloat(document.getElementById('sub'+i)?.value); if(!isNaN(val)){sum+=val; count++;} } var res = document.getElementById('calcResult'); if(res) { if(count===0){ res.innerText="Enter marks."; res.style.color="red"; return; } res.style.color="var(--primary-btn)"; res.innerText="Result: "+((sum/(count*100))*100).toFixed(2)+"%"; } }
+        function toggleStreamOptions() { var c = document.getElementById('classSelect')?.value; const sg = document.getElementById('streamGroup'); if(sg) { sg.classList.toggle('hidden', c!=='11'&&c!=='12'); } }
+        document.addEventListener('DOMContentLoaded', function() { try { var elt = document.getElementById('desmos-calculator'); if (elt) { var calculator = Desmos.GraphingCalculator(elt, { keypad: true, expressions: true }); calculator.setExpression({ id: 'graph1', latex: 'y=x^2' }); } } catch(e) {} });
+
+        // --- 7. SCROLL REVEAL ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { setTimeout(() => entry.target.classList.add("active"), 100); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+            document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+            window.onscroll = function() { var topBtn = document.getElementById("backToTop"); if(topBtn) { if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { topBtn.style.display = "flex"; } else { topBtn.style.display = "none"; } } };
+        });
+
+        // --- 8. SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://lykptojrqiryuhvrjube.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_o2gM5AaKU6BswoPlMvlbWQ_OiVbyYVH';
+        let supabaseClient; let currentUser = null;
+        
+        function initSupabase() {
+            if (typeof window.supabase === 'undefined') { setTimeout(initSupabase, 500); return; }
+            try {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                supabaseClient.auth.onAuthStateChange((event, session) => {
+                    const dbEl = document.getElementById('privateDashboard');
+                    const ubEl = document.getElementById('userBtn');
+                    if (session?.user) { 
+                        currentUser = session.user; 
+                        if(ubEl) ubEl.innerText = "👤 Profile"; 
+                        if(dbEl) dbEl.classList.remove('hidden'); 
+                        loadUserData(); loadKanbanState(); loadSyllabusState(); loadFlashcards();
+                    } else { 
+                        currentUser = null; 
+                        if(ubEl) ubEl.innerText = "👤 Login / Sign Up"; 
+                        if(dbEl) dbEl.classList.add('hidden'); 
+                    }
+                });
+            } catch(err) { console.error("Supabase connection skipped locally or failed."); }
+        }
+        initSupabase();
+
+        async function handleAuth(mode) {
+            if (!supabaseClient) { alert("Database loading..."); return; }
+            const email = document.getElementById(mode+'Email').value; const password = document.getElementById(mode+'Password').value;
+            if(!email || !password) return; let result;
+            if(mode === 'login') { result = await supabaseClient.auth.signInWithPassword({ email, password }); } 
+            else { const name = document.getElementById('signupName').value; result = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name: name } } }); }
+            if (result.error) alert(result.error.message); else closeAuthModal();
+        }
+
+        function openAuthOrProfile() {
+            if(currentUser) {
+                document.getElementById('profileName').innerText = currentUser.user_metadata?.full_name || "Student"; document.getElementById('profileEmail').innerText = currentUser.email; document.getElementById('profileModal').classList.remove('hidden');
+            } else { document.getElementById('authModal').classList.remove('hidden'); }
+        }
+        function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
+        async function logoutUser() { if(supabaseClient) await supabaseClient.auth.signOut(); closeProfileModal(); }
+
+        // --- 9. DASHBOARD DATA ---
+        let userData = { notes: "" };
+        function saveUserData() { if(!currentUser) return; const un = document.getElementById('userNotes'); if(un) { userData.notes = un.value; localStorage.setItem('studentPortalData_' + currentUser.id, JSON.stringify(userData)); } }
+        function loadUserData() { if(!currentUser) return; const saved = localStorage.getItem('studentPortalData_' + currentUser.id); if(saved) userData = JSON.parse(saved); const un = document.getElementById('userNotes'); if(un) { un.value = userData.notes || ""; } }
+        function toggleAppsMenu() { const am = document.getElementById('googleAppsMenu'); if(am) { am.classList.toggle('hidden'); } }
+
+        async function uploadToSupabase(input) {
+            if (!supabaseClient || !currentUser) { alert("Please log in."); return; }
+            const file = input.files[0]; if (!file) return;
+            const statusEl = document.getElementById('uploadStatus'); if(statusEl) statusEl.innerText = "Uploading ⏳";
+            try { const fileName = currentUser.id + "/" + Date.now() + "_" + file.name.replace(/\s+/g, "_"); const { error } = await supabaseClient.storage.from('user-files').upload(fileName, file); if (error) throw error; if(statusEl) statusEl.innerText = "✅ Saved securely in cloud!"; } catch (err) { if(statusEl) statusEl.innerText = "❌ Upload failed"; }
+        }
+
+        function closeAuthModal() { const am = document.getElementById('authModal'); if(am) am.classList.add('hidden'); }
+        function switchAuthTab(tab) { document.getElementById('tabLogin').classList.toggle('active', tab==='login'); document.getElementById('tabSignup').classList.toggle('active', tab==='signup'); document.getElementById('viewLogin').classList.toggle('hidden', tab!=='login'); document.getElementById('viewSignup').classList.toggle('hidden', tab!=='signup'); }
+
+        // --- 10. AI CHATBOT ---
+        const GEMINI_API_KEY = "AQ.Ab8RN6IjqRVhSSM5O6rE8jBty2i3RmCAB7JWU1YxYU2HbnmiOQ"; 
+        function toggleAIChat() { const cw = document.getElementById('aiChatWindow'); if(cw) cw.classList.toggle('hidden'); }
+        function handleAIKeyPress(e) { if (e.key === 'Enter') sendAIMessage(); }
+        async function sendAIMessage() {
+            const inputField = document.getElementById('aiUserInput'); if(!inputField) return; const message = inputField.value.trim(); if (!message) return;
+            addChatMessage(message, 'user-message'); inputField.value = ''; const loadingId = addChatMessage("Connecting...", 'ai-message'); 
+            try {
+                const modelReq = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`); const modelData = await modelReq.json();
+                const validModel = modelData.models.find(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"));
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${validModel.name}:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: "You are a helpful AI tutor. Answer: " + message }] }] }) });
+                const data = await response.json(); const loadEl = document.getElementById(loadingId); if(loadEl) loadEl.remove(); 
+                if (data.error) addChatMessage("Error: " + data.error.message, 'ai-message'); else addChatMessage(data.candidates[0].content.parts[0].text, 'ai-message');
+            } catch (error) { const loadEl = document.getElementById(loadingId); if(loadEl) loadEl.remove(); addChatMessage("Network error.", 'ai-message'); }
+        }
+        function addChatMessage(text, className) { const msgDiv = document.createElement('div'); msgDiv.className = `chat-message ${className}`; msgDiv.id = 'msg-' + Date.now(); msgDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'); const container = document.getElementById('aiChatMessages'); if(container) { container.appendChild(msgDiv); container.scrollTop = container.scrollHeight; } return msgDiv.id; }
+    </script>
+</body>
+</html>
